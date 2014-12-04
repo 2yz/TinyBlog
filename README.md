@@ -1,4 +1,1 @@
-TinyBlog
-========
-
-Tiny Blog on LeanCloud
+Cloud code project for TinyBlog. Cloud Code Guide: https://cn.avoscloud.com/docs/cloud_code_guide.html
