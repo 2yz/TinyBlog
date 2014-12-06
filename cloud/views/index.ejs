@@ -147,15 +147,17 @@
 		</div>
 		<div class="col-sm-3">
 			<div>
-				<form role="form">
+			<% if (!email){ %>
+				<form role="form" action="/test1" method="post">
 					<div class="form-group">
 						<label for="exampleInputEmail1">Email address</label>
-						<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+						<input type="email" class="form-control" name="email" id="exampleInputEmail1" placeholder="Enter email">
 					</div>
 					<div class="form-group">
 						<label for="exampleInputPassword1">Password</label>
-						<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+						<input type="password" class="form-control" name="password" id="exampleInputPassword1" placeholder="Password">
 					</div>
+					<!--
 					<div class="form-group">
 						<label for="exampleInputFile">File input</label>
 						<input type="file" id="exampleInputFile">
@@ -164,8 +166,13 @@
 					<div class="checkbox">
 						<label><input type="checkbox"> Check me out</label>
 					</div>
-					<button type="submit" class="btn btn-default">Submit</button>
+					-->
+					<button type="submit" class="btn btn-default">Login</button>
 				</form>
+			<% } else {%>
+				<h3>Welcome!</h3>
+				<span><%=email%></span>
+			<% } %>
 			</div>
 		</div>
 	</div>

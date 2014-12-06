@@ -20,13 +20,15 @@ app.get('/hello', function(req, res) {
 var Visitor = AV.Object.extend('Visitor');
 function renderIndex(res, name){
 	var query = new AV.Query(Visitor);
+	var email;
 	query.skip(0);
 	query.limit(10);
 	query.descending('createdAt');
 	query.find({
 		success: function(results){
-			res.render('index',{ name: "Yezersky", visitors: results});
-			//res.render('index',{ name: name, visitors: results});
+			//res.render('index',{ name: "Yezersky", visitors: results});
+			res.render('index',{ name: name, visitors: results, email: email});
+
 			//res.render('index',{visitors: results});
 		},
 		error: function(error){
@@ -48,6 +50,30 @@ app.get('/test', function(req, res){
 	res.render('test');
 });
 
+app.post('/test1', function(req, res){
+	var email =  req.body.email;
+	var password = req.body.password;
+	console.log(email);
+	console.log(password);
+	var query = new AV.Query(Visitor);
+	query.skip(0);
+	query.limit(10);
+	query.descending('createdAt');
+	query.find({
+		success: function(results){
+			//res.render('index',{ name: "Yezersky", visitors: results});
+			res.render('index',{ name: name, visitors: results, email: email});
+
+			//res.render('index',{visitors: results});
+		},
+		error: function(error){
+			console.log(error);
+			res.render('500',500)
+		}
+	});
+});
+
+
 app.post('/',function(req, res){
 	var name = req.body.name;
 	if(name && name.trim() !=''){
@@ -67,5 +93,14 @@ app.post('/',function(req, res){
 	}
 });
 
+app.post('/test1', function(req, res){
+	var email =  req.body.email;
+	var password = req.body.password;
+	console.log(email);
+	console.log(password);
+	if (email === password) {
+		res.send(email+" "+password+"get!");
+	};
+});
 // This line is required to make Express respond to http requests.
 app.listen();
