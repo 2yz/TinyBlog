@@ -25,7 +25,9 @@ function renderIndex(res, name){
 	query.descending('createdAt');
 	query.find({
 		success: function(results){
-			res.render('index',{ name: name, visitors: results});
+			res.render('index',{ name: "Yezersky", visitors: results});
+			//res.render('index',{ name: name, visitors: results});
+			//res.render('index',{visitors: results});
 		},
 		error: function(error){
 			console.log(error);
@@ -40,6 +42,10 @@ app.get('/', function(req, res){
 	if(!name)
 		name = 'AVOS Cloud';
 	renderIndex(res, name);
+});
+
+app.get('/test', function(req, res){
+	res.render('test');
 });
 
 app.post('/',function(req, res){
