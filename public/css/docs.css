@@ -12,7 +12,35 @@
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#563d7c', endColorstr='#6F5499', GradientType=0);
 	background-repeat: repeat-x;
 }
-
-#top {
-	background-color:rgba(255, 255, 255, 0.85);
+#docs-nav {
+	margin-bottom: 0;
+	border-bottom: 0;
+	background-color:rgba(255, 255, 255, 0.75);
 }
+#carousel-example-generic {
+	margin: 0em 0em 2em 0em;
+}
+.img-thumbnail-me {
+	padding: 4px;
+  	line-height: 1.42857143;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	-webkit-transition: all .2s ease-in-out;
+	-o-transition: all .2s ease-in-out;
+	transition: all .2s ease-in-out;
+}
+.navbar-signup {
+	margin-right: 15px;
+	margin-left: 15px;
+	color: #777;
+}
+/*
+@media (min-width: 768px) {
+  .navbar-signup {
+    float: left;
+    margin-right: 15px;
+    margin-left: 15px;
+  }
+}
+*/
