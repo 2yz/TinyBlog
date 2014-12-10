@@ -31,8 +31,11 @@ app.get('/hello', function(req, res) {
 var Visitor = AV.Object.extend('Visitor');
 var Posts = AV.Object.extend('Posts');
 var Board = AV.Object.extend('Board');
+var Comments = AV.Object.extend('Comments');
+
 function renderIndex(req, res){
 	var username;
+	var postsList;
 	var queryPosts = new AV.Query(Posts);
 	if(AV.User.current()) {
 		username = AV.User.current().getUsername();
@@ -50,6 +53,32 @@ function renderIndex(req, res){
 		console.log(error);
 		res.render('500',500);
 	});
+}
+
+/*
+function recentPost() {
+	console.log("post");
+	var queryPosts = new AV.Query(Posts);
+	queryPosts.skip(0);
+	queryPosts.limit(5);
+	queryPosts.descending('createdAt');
+	queryPosts.find().then(function(posts) {
+		console.log("post");
+		return posts;
+	},function(error) {
+		//console.log(error);
+		//res.render('500',500);
+		return null;
+	});
+}
+
+function recentComment() {
+
+}
+*/
+
+function recentComment() {
+
 }
 
 app.get('/', function(req, res){
@@ -85,12 +114,15 @@ app.post('/signin', function(req, res) {
 		console.log('session username');
 		console.log(req.session.username);
 		console.log(req.session);
-		res.redirect('back');
+		//res.redirect('back');
+		res.send("success");
 	},function(error) {
 		//res.redirect('/');
 		//console.log("send error");
 		//res.send("error");
-		res.send({ret:false,msg:'Error',data:error});
+		//res.send({ret:false,msg:'Error',data:error});
+		//res.send(error);
+		res.send("fail");
 	})
 });
 
@@ -106,14 +138,15 @@ app.post('/signup', function(req, res) {
 	user.set("password", req.body.password);
 	user.signUp(null, {
 		success: function(user) {
-			console.log('success');
-			console.log(user);
+			//console.log('success');
+			//console.log(user);
 			res.redirect('/');
 		},
 		error: function(user, error) {
-			console.log('fail');
-			console.log(user);
-			console.log(error);
+			//console.log('fail');
+			//console.log(user);
+			//console.log(error);
+			res.send(error.message);
 		}
 	});
 
@@ -126,13 +159,47 @@ app.get('/signout', function(req, res) {
 app.get('/post/:id', function(req, res) {
 	//var postId = req.params.id;
 	var username;
+	var post;
+	var comments;
 	var postId = Number(req.params.id);
 	console.log(req.params.id);
 	if(AV.User.current()) {
 		username = AV.User.current().getUsername();
 	}
 	var query = new AV.Query(Posts);
+	var commentQuery = new AV.Query(Comments);
+	var queryPosts = new AV.Query(Posts);
 	query.equalTo("postId", postId);
+	queryPosts.skip(0);
+	queryPosts.limit(5);
+	queryPosts.descending('createdAt');
+	query.first().then(function(postObject) {
+		if(postObject){
+			post = postObject;
+			commentQuery.equalTo("post", post);
+			return commentQuery.find();
+		} else {
+			res.send("error")
+		}
+	}, function(error) {
+		//console.log(error);
+		res.send(error);
+	}).then(function(commentsArray) {
+		//console.log(post);
+		//console.log(comments);
+		comments = commentsArray;
+		return queryPosts.find();
+	}, function(error) {
+		console.log(error);
+		res.send(error);
+	}).then(function(posts) {
+		res.render('post',{username: username, post: post, comments: comments, postsList: posts});
+		//res.render('index',{postsList: posts, username: username});
+	},function(error) {
+		console.log(error);
+		res.render('500',500);
+	});
+	/*
 	query.find({
 		success: function(results) {
 			if(results[0])
@@ -147,19 +214,51 @@ app.get('/post/:id', function(req, res) {
 			res.render('500', 500);
 		}
 	});
+*/
 });
+
 app.post('/comment/:id',function(req, res) {
 	var postId = Number(req.params.id);
+	var author  = req.body.author;
 	var email = req.body.email;
 	var content = req.body.content;
-	console.log(req.body.email);
-	console.log(req.body.content);
-	res.send(postId+"<br/>"+email+"<br/>"+content);
+	var postsQuery = new AV.Query(Posts);
+	var comment = new Comments();
+	postsQuery.equalTo("postId", postId);
+	comment.set("commentAuthor", author);
+	comment.set("commentAuthorEmail", email);
+	comment.set("commentContent", content);
+	postsQuery.first().then(function(post) {
+		if(post){
+			comment.set("post", post);
+			comment.save({
+				success: function(result) {
+					res.redirect('back');
+				},
+				error: function(error) {
+					console.log(error);
+					res.send(error);
+				}
+			});
+		} else {
+			res.send("error")
+		}
+		
+		//res.render('index',{postsList: posts, username: username});
+	},function(error) {
+		console.log(error);
+		res.send(error);
+	});
+	//console.log(req.body.email);
+	//console.log(req.body.content);
+	//res.send(postId+"<br/>"+email+"<br/>"+content);
 });
 
 app.get('/board', function(req, res) {
 	var username;
+	var boardMessages;
 	var query = new AV.Query(Board);
+	var queryPosts = new AV.Query(Posts);
 	var currentMessage;
 	if(req.query.message) {
 		currentMessage = req.query.message;
@@ -170,9 +269,19 @@ app.get('/board', function(req, res) {
 	query.skip(0);
 	query.limit(10);
 	query.descending('createdAt');
-	query.find().then(function(boardMessages) {
+	queryPosts.skip(0);
+	queryPosts.limit(5);
+	queryPosts.descending('createdAt');
+	query.find().then(function(boardMessagesArray) {
 		console.log("BoardQuery successfully");
-		res.render('board',{boardMessages: boardMessages, username: username, currentMessage: currentMessage});
+		boardMessages = boardMessagesArray;
+		return queryPosts.find();
+	},function(error) {
+		console.log(error);
+		res.render('500',500);
+	}).then(function(posts) {
+		res.render('board',{boardMessages: boardMessages, username: username, currentMessage: currentMessage, postsList: posts});
+		
 	},function(error) {
 		console.log(error);
 		res.render('500',500);
