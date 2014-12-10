@@ -4,6 +4,7 @@ var app = express();
 var name = require('cloud/name.js');
 var avosExpressHttpsRedirect = require('avos-express-https-redirect');
 var avosExpressCookieSession = require('avos-express-cookie-session');
+//var Encoder = require('node-html-encoder').Encoder;
 //var session = require('cookie-session'); // cookie session configuration
 
 
@@ -29,50 +30,27 @@ app.get('/hello', function(req, res) {
 
 var Visitor = AV.Object.extend('Visitor');
 var Posts = AV.Object.extend('Posts');
+var Board = AV.Object.extend('Board');
 function renderIndex(req, res){
-	var name = req.query.name;
 	var username;
-	if(!name)
-		name = 'AVOS Cloud';
-	var query = new AV.Query(Visitor);
 	var queryPosts = new AV.Query(Posts);
-	var postsList;
-	var resultsList;
-	var email;
-	console.log(req.session);
 	if(AV.User.current()) {
-		console.log("username: " + username);
 		username = AV.User.current().getUsername();
 		console.log("username: " + username);
-		console.log(req.session);
 		console.log(req.session.username);
 	}
-	query.skip(0);
-	query.limit(10);
-	query.descending('createdAt');
 	queryPosts.skip(0);
 	queryPosts.limit(5);
 	queryPosts.descending('createdAt');
-	query.find().then(function(results) {
-		resultsList = results;
-		//console.log(resultsList);
-		console.log("resultsQuery successfully");
-		return queryPosts.find();
-	}).then(function(posts) {
-		postsList = posts;
-		//console.log("queryPosts: ");
-		//console.log(resultsList);
-		//console.log("queryPosts: ");
-		//console.log(postsList);
+	queryPosts.find().then(function(posts) {
 		console.log("PostsQuery successfully");
-		res.render('index',{ name: name, visitors: resultsList, email: email, postsList: postsList, username: username});
+		res.render('index',{postsList: posts, username: username});
 		console.log("render successfully");
 	},function(error) {
 		console.log(error);
 		res.render('500',500);
 	});
 }
-
 
 app.get('/', function(req, res){
 	renderIndex(req, res);
@@ -107,7 +85,7 @@ app.post('/signin', function(req, res) {
 		console.log('session username');
 		console.log(req.session.username);
 		console.log(req.session);
-		res.redirect('/');
+		res.redirect('back');
 	},function(error) {
 		//res.redirect('/');
 		//console.log("send error");
@@ -142,14 +120,83 @@ app.post('/signup', function(req, res) {
 });
 app.get('/signout', function(req, res) {
 	AV.User.logOut();
-	res.redirect('/');
+	res.redirect('back');
 });
 
 app.get('/post/:id', function(req, res) {
+	//var postId = req.params.id;
+	var username;
+	var postId = Number(req.params.id);
 	console.log(req.params.id);
-	res.send('get: ' + req.params.id);
+	if(AV.User.current()) {
+		username = AV.User.current().getUsername();
+	}
+	var query = new AV.Query(Posts);
+	query.equalTo("postId", postId);
+	query.find({
+		success: function(results) {
+			if(results[0])
+			{
+				res.render('post',{username: username, post: results[0]});
+			} else {
+				res.send("error");
+			}
+			
+		},
+		error: function(error) {
+			res.render('500', 500);
+		}
+	});
+});
+app.post('/comment/:id',function(req, res) {
+	var postId = Number(req.params.id);
+	var email = req.body.email;
+	var content = req.body.content;
+	console.log(req.body.email);
+	console.log(req.body.content);
+	res.send(postId+"<br/>"+email+"<br/>"+content);
 });
 
+app.get('/board', function(req, res) {
+	var username;
+	var query = new AV.Query(Board);
+	var currentMessage;
+	if(req.query.message) {
+		currentMessage = req.query.message;
+	}
+	if(AV.User.current()) {
+		username = AV.User.current().getUsername();
+	}
+	query.skip(0);
+	query.limit(10);
+	query.descending('createdAt');
+	query.find().then(function(boardMessages) {
+		console.log("BoardQuery successfully");
+		res.render('board',{boardMessages: boardMessages, username: username, currentMessage: currentMessage});
+	},function(error) {
+		console.log(error);
+		res.render('500',500);
+	});
+});
+
+app.post('/board', function(req, res) {
+	var message = req.body.message;
+	if(message && message.trim() !=''){
+		//Save visitor
+		var board = new Board();
+		board.set('message', message);
+		board.save(null, {
+			success: function(gameScore) {
+				res.redirect('/board?message=' + message);
+			},
+			error: function(gameScore, error) {
+				res.render('500', 500);
+			}
+		});
+	}else{
+		res.redirect('back');
+	}
+});
 
 //require('cloud/test.js');
 app.get('/test', function(req, res){
@@ -181,9 +228,6 @@ app.post('/test1', function(req, res){
 		}
 	});
 });
-
-
-
 
 app.post('/test1', function(req, res){
 	var email =  req.body.email;

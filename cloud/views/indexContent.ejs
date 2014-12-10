@@ -32,11 +32,11 @@
 			<% postsList.forEach(function (post) { %>
 			<div class="panel panel-default">
 			<div class="panel-body media">
-				<a class="media-left" href="#">
+				<a class="media-left" >
 					<img class="img-thumbnail-me" src="/img/img2.jpg" alt="Yezersky" style="width: 64px; height: 64px;">
 				</a>
 				<div class="media-body">
-					<h4 class="media-heading"><%=post.get('postTitle') %></h4>
+					<h4 class="media-heading"><a href="/post/<%=post.get('postId')%>"><%=post.get('postTitle') %></a></h4>
 					<%=post.get('postExcerpt') %>
 				</div>
 				
@@ -44,31 +44,3 @@
 			</div>
 			<% })
 			 } %>
-			
-
-
-
-	  <h3>AVOS Cloud网站托管Demo</h3>
-	  <br/>
-	  <p>hello,<%= name %></p>
-	  <br/>
-	  <div>
-		<form action="/" method="post">
-		  Say hello to: <input type='text' name='name' id='name'/>
-		  <input type='submit' value='Say'/>
-		</form>
-	  </div>
-	  <br/>
-	  <br/>
-	  <h4>Recent visitors</h4>
-	  <br/>
-	  <br/>
-	  <table class='table table-bordered'>
-		<% if (visitors){ %>
-		<%  visitors.forEach(function (visitor){ %>
-		<tr>
-		  <td> <%= visitor.get('name') %> </td>
-		</tr>
-		<% })
-		   } %>
-	  </table>

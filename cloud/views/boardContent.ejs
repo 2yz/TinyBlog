@@ -1,0 +1,27 @@
+<h3>Message Board</h3>
+<br/>
+<div class="form-group">
+	<form action="/board" method="post">
+		<div class="form-group">
+			<input type="text" class="form-control" name="message" placeholder="Leave some words!"/>
+		</div>
+		<button type="submit" class="btn btn-default">Say</button>
+	</form>
+</div>
+<br/>
+<% if(currentMessage) { %>
+<h4>You said <small><%=currentMessage%></small> just now!</h4>
+<br/>
+<% } %>
+<h4>Recent message</h4>
+<br/>
+<table class='table table-bordered table-hover'>
+	<% if (boardMessages){ %>
+	<%  boardMessages.forEach(function (message){ %>
+	<tr>
+		<td> <%= message.get('message') %> </td>
+	</tr>
+	<% })
+	} %>
+</table>
+<br/>

@@ -1,5 +1,5 @@
 			<div>
-			<% if (!email){ %>
+				<!--
 				<form role="form" action="/test1" method="post">
 					<div class="form-group">
 						<label for="exampleInputEmail1">Email address</label>
@@ -9,7 +9,7 @@
 						<label for="exampleInputPassword1">Password</label>
 						<input type="password" class="form-control" name="password" id="exampleInputPassword1" placeholder="Password">
 					</div>
-					<!--
+					
 					<div class="form-group">
 						<label for="exampleInputFile">File input</label>
 						<input type="file" id="exampleInputFile">
@@ -18,11 +18,17 @@
 					<div class="checkbox">
 						<label><input type="checkbox"> Check me out</label>
 					</div>
-					-->
 					<button type="submit" class="btn btn-default">Login</button>
 				</form>
-			<% } else {%>
-				<h3>Welcome!</h3>
-				<span><%=email%></span>
-			<% } %>
+				-->
+				<form class="form" role="login" action="/signin" method="post">
+					<div class="form-group">
+						<input type="username" class="form-control" name="username" placeholder="Username">
+					</div>
+					<div class="form-group">
+						<input type="password" class="form-control" name="password" placeholder="Password">
+					</div>
+					<button type="submit" class="btn btn-default">Sign in</button>
+					<a href="/signup" class="navbar-signup">Sign up</a>
+				</form>
 			</div>
