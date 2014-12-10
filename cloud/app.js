@@ -14,7 +14,6 @@ var avosExpressCookieSession = require('avos-express-cookie-session');
 //设置模板目录
 app.set('views', 'cloud/views');
 app.set('view engine', 'ejs');    // 设置template引擎
-//app.set('trust proxy', 1); // cookie session configuration
 app.use(avosExpressHttpsRedirect()); //启用HTTPS
 app.use(express.bodyParser());    // 读取请求body的中间件
 app.use(express.cookieParser('FrENkCieRk'));// cookie secure
