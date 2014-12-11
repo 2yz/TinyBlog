@@ -1,7 +1,6 @@
 // 在Cloud code里初始化express框架
 var express = require('express');
 var app = express();
-var name = require('cloud/name.js');
 var avosExpressHttpsRedirect = require('avos-express-https-redirect');
 var avosExpressCookieSession = require('avos-express-cookie-session');
 
@@ -31,16 +30,16 @@ function renderIndex(req, res){
 	var queryPosts = new AV.Query(Posts);
 	if(AV.User.current()) {
 		username = AV.User.current().getUsername();
-		console.log("username: " + username);
+		//console.log("username: " + username);
 		console.log(req.session.username);
 	}
 	queryPosts.skip(0);
 	queryPosts.limit(5);
 	queryPosts.descending('createdAt');
 	queryPosts.find().then(function(posts) {
-		console.log("PostsQuery successfully");
+		//console.log("PostsQuery successfully");
 		res.render('index',{postsList: posts, username: username});
-		console.log("render successfully");
+		//console.log("render successfully");
 	},function(error) {
 		console.log(error);
 		res.render('500',500);
@@ -73,13 +72,13 @@ app.post('/',function(req, res){
 app.post('/signin', function(req, res) {
 	AV.User.logIn(req.body.username, req.body.password).then(function() {
 		var currentUser = AV.User.current();
-		console.log(currentUser);
+		//console.log(currentUser);
 		var username = currentUser.getUsername();
-		console.log('signin successfully: %j', username);
+		//console.log('signin successfully: %j', username);
 		req.session.username = username;
-		console.log('session username');
-		console.log(req.session.username);
-		console.log(req.session);
+		//console.log('session username');
+		//console.log(req.session.username);
+		//console.log(req.session);
 		//res.redirect('back');
 		res.send("success");
 	},function(error) {
@@ -110,8 +109,8 @@ app.post('/signup', function(req, res) {
 		},
 		error: function(user, error) {
 			//console.log('fail');
-			//console.log(user);
-			//console.log(error);
+			console.log(user);
+			console.log(error);
 			res.send(error.message);
 		}
 	});
@@ -119,6 +118,8 @@ app.post('/signup', function(req, res) {
 });
 app.get('/signout', function(req, res) {
 	AV.User.logOut();
+	req.session.username = null;
+	console.log(req.session.username);
 	res.redirect('back');
 });
 
@@ -128,7 +129,7 @@ app.get('/post/:id', function(req, res) {
 	var post;
 	var comments;
 	var postId = Number(req.params.id);
-	console.log(req.params.id);
+	//console.log(req.params.id);
 	if(AV.User.current()) {
 		username = AV.User.current().getUsername();
 	}
@@ -239,7 +240,7 @@ app.get('/board', function(req, res) {
 	queryPosts.limit(5);
 	queryPosts.descending('createdAt');
 	query.find().then(function(boardMessagesArray) {
-		console.log("BoardQuery successfully");
+		//console.log("BoardQuery successfully");
 		boardMessages = boardMessagesArray;
 		return queryPosts.find();
 	},function(error) {
