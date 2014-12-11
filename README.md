@@ -9,6 +9,11 @@ A simple Node.js blog system on LeanCloud.
 
 - LeanCloud database service is consist of MongoDB, MySQL, HBase and Redis.
 
+Demo: [https://tinyblog.avosapps.com/](https://tinyblog.avosapps.com/)
+
+Source code: [https://github.com/Yezersky/TinyBlog](https://github.com/Yezersky/TinyBlog)
+
+
 ## Feature
 
 - Show posts and comments.
