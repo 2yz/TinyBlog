@@ -1,5 +1,8 @@
-<div id="post-content"><h3><%=post.get('postTitle')%></h3></div>
-<div><%-post.get('postContent')%></div>
+<div id="post-content">
+	<h3><%=post.get('postTitle')%></h3>
+	<div><%-post.get('postContent')%></div>
+	<p class="text-right docs-comment-time"><small><%=post.createdAt%></small></p>
+</div>
 <div id="post-comment">
 	<h3 class="page-header">Comments</h3>
 	<% if(comments) { %>

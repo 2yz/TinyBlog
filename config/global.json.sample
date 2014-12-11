@@ -1,0 +1,8 @@
+{
+    "applicationName" : "TinyBlog",
+    "applicationId": "YOUR APPLICATION ID",
+    "applicationKey": "YOUR APPLICATION KEY",
+    "global": {
+        "avVersion": "0.3.1"
+    }
+}

@@ -4,11 +4,6 @@ var app = express();
 var name = require('cloud/name.js');
 var avosExpressHttpsRedirect = require('avos-express-https-redirect');
 var avosExpressCookieSession = require('avos-express-cookie-session');
-//var Encoder = require('node-html-encoder').Encoder;
-//var session = require('cookie-session'); // cookie session configuration
-
-
-
 
 // App全局配置
 //设置模板目录
@@ -19,8 +14,6 @@ app.use(express.bodyParser());    // 读取请求body的中间件
 app.use(express.cookieParser('FrENkCieRk'));// cookie secure
 app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }, fetchUser: true, key: 'TinyBlog'}));
 app.use(express.cookieSession({ key:'TinyBlog.sess'}));
-
-
 
 //使用express路由API服务/hello的http GET请求
 app.get('/hello', function(req, res) {
@@ -52,32 +45,6 @@ function renderIndex(req, res){
 		console.log(error);
 		res.render('500',500);
 	});
-}
-
-/*
-function recentPost() {
-	console.log("post");
-	var queryPosts = new AV.Query(Posts);
-	queryPosts.skip(0);
-	queryPosts.limit(5);
-	queryPosts.descending('createdAt');
-	queryPosts.find().then(function(posts) {
-		console.log("post");
-		return posts;
-	},function(error) {
-		//console.log(error);
-		//res.render('500',500);
-		return null;
-	});
-}
-
-function recentComment() {
-
-}
-*/
-
-function recentComment() {
-
 }
 
 app.get('/', function(req, res){
@@ -306,45 +273,5 @@ app.post('/board', function(req, res) {
 	}
 });
 
-//require('cloud/test.js');
-app.get('/test', function(req, res){
-	res.render('test');
-});
-
-
-app.post('/test1', function(req, res){
-	var email =  req.body.email;
-	var password = req.body.password;
-	var postsList;
-	var resultsList;
-	console.log(email);
-	console.log(password);
-	var query = new AV.Query(Visitor);
-	query.skip(0);
-	query.limit(10);
-	query.descending('createdAt');
-	query.find({
-		success: function(results){
-			//res.render('index',{ name: "Yezersky", visitors: results});
-			res.render('index',{ name: name, visitors: results, email: email, postsList: postsList});
-
-			//res.render('index',{visitors: results});
-		},
-		error: function(error){
-			console.log(error);
-			res.render('500',500)
-		}
-	});
-});
-
-app.post('/test1', function(req, res){
-	var email =  req.body.email;
-	var password = req.body.password;
-	console.log(email);
-	console.log(password);
-	if (email === password) {
-		res.send(email+" "+password+"get!");
-	};
-});
 // This line is required to make Express respond to http requests.
 app.listen();

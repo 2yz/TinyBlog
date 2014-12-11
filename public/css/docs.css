@@ -81,6 +81,10 @@ body {
 	margin:24px 0px 24px 0px;
 
 }
+
+.docs-comment-time {
+	color: #888888;
+}
 /*
 @media (min-width: 768px) {
   .navbar-signup {
