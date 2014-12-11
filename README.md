@@ -32,11 +32,11 @@ avoscloud-code ([setup guide](https://leancloud.cn/docs/cloud_code_commandline.h
 
 ## Setup
 
-1. Copy /config/global.json.sample to /config/global.json
+1. Copy `/config/global.json.sample` to `/config/global.json`
 
-2. Modify /config/global.json with your own application id and key.
+2. Modify `/config/global.json` with your own application id and key.
 
-3. Use /install/database_sample.tar.gz to initial the database. ([import guide](https://cn.avoscloud.com/docs/data_security.html#导入数据))
+3. Use `/install/database_sample.tar.gz` to initial the database. ([import guide](https://cn.avoscloud.com/docs/data_security.html#导入数据))
 
 4. Upload the application to LeanCloud. ([deploy guide](https://cn.avoscloud.com/docs/cloud_code_commandline.html#部署))
 
